@@ -5,12 +5,76 @@ package:
   individually: true
 
 plugins:
-  - serverless-bundle
+  - serverless-bundle # Package our functions with Webpack
   - serverless-offline
-  - serverless-dotenv-plugin
+  - serverless-dotenv-plugin # Load .env as environment variables
 
 provider:
   name: aws
   runtime: nodejs12.x
   stage: prod
   region: eu-west-1
+
+  # These environment variables are made available to our functions
+  # under process.env.
+  environment:
+    tableName: jobcards
+
+  # 'iamRoleStatements' defines the permission policy for the Lambda function.
+  # In this case Lambda functions are granted with permissions to access DynamoDB.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:eu-west-1:*:*"
+
+functions:
+  create:
+    handler: create.main
+    events:
+      - http:
+          path: jobcards
+          method: post
+          cors: true
+          authorizer: aws_iam
+  get:
+    handler: get.main
+    events:
+      - http:
+          path: jobcards/{job_id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+  list:
+    handler: list.main
+    events:
+      - http:
+          path: jobcards
+          method: get
+          cors: true
+          authorizer: aws_iam
+  update:
+    handler: update.main
+    events:
+      - http:
+          path: jobcards/{job_id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+  delete:
+    handler: delete.main
+    events:
+      - http:
+          path: jobcards/{job_id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+
+resources:
+  - ${file(resources/api-gateway-errors.yml)}
