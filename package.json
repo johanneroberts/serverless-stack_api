@@ -19,6 +19,8 @@
     "serverless-offline": "^5.3.3"
   },
   "dependencies": {
+    "eslint-config-defaults": "^9.0.0",
+    "eslint-plugin-react": "^7.20.3",
     "uuid": "^7.0.3"
   }
 }
