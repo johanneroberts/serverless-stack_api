@@ -1,0 +1,18 @@
+Resources:
+    JobcardsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: job_id
+            AttributeType: S
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: job_id
+            KeyType: RANGE
