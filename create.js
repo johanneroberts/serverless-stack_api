@@ -7,7 +7,7 @@ export const main = handler(async (event, context) => {
     TableName: process.env.tableName,
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      job_id: Date.now(),
+      job_id: data.job_id,
       job_location: data.job_location,
       job_plumber: data.job_plumber,
       job_status: data.job_status
